@@ -1,0 +1,53 @@
+---
+title: "Untitled"
+author: "Matt Leonard"
+date: "12/29/2020"
+output: html_document
+---
+
+```{r}
+library(tidyverse)
+library(tidytuesdayR)
+library(scales)
+```
+
+
+```{r}
+tuesdata <- tidytuesdayR::tt_load(2020, week = 52)
+
+bigmac <- tuesdata$'big-mac'
+
+```
+
+```{r}
+bigmac
+```
+
+
+```{r}
+bigmac %>% 
+  ggplot(aes(dollar_price, gdp_dollar))+
+  geom_point(color = "#DA291C")+
+  geom_smooth(method = lm, color = "#FFC72C")+
+  theme(plot.background = element_rect(fill = "black", color = "black"),
+        panel.background = element_rect(fill = "black", color = "black"))+
+  scale_y_continuous(labels = scales::dollar_format())+
+  scale_x_continuous(labels = scales::dollar_format())+
+  theme(axis.text = element_text(color = "white", face = "bold"),
+        axis.title = element_text(color = "white", face = "bold"),
+        plot.title = element_text(color = "white", face = "bold"),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank())+
+  labs(title = "Does Big Mac price predict GDP?",
+       y = "GDP per person, U.S. dollars",
+       x = "Big Mac price, U.S. dolars")
+```
+
+
+```{r}
+bigreg <- lm(gdp_dollar ~ dollar_price, data = bigmac)
+```
+```{r}
+summary(bigreg)
+```
+
